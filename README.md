@@ -16,38 +16,38 @@ You can use TalosVFX runtimes in any C++ engine by implementing the few classes.
 - `IFileProvider` to load the data files ([RapidJson loader provided](https://github.com/damucz/talos-cpp/tree/master/loaders))
 - `IParticleDrawable` for few drawable classes, at least one, depending on your effect needs
 
-1. `Talos::IFactory`
+## `Talos::IFactory`
 In factory you are responsible for creating classes to be used by Talos, usually with your custom implementation.
 
-Loader is mandatory:
-   1. `Talos::IFileProvider* CreateFileProvider(const char* fileName)`
-Should create class inherited from IFileProvider, responsible for loading json data files and supply the data on demand (explained later).
+### Loader is mandatory:
+1. `Talos::IFileProvider* CreateFileProvider(const char* fileName)`
+Should create class inherited from IFileProvider, responsible for loading json data files and supply the data on demand (explained later).<br />
 You can you use provided RapidJson loader just by: `return new Talos::RapidJsonProvider(fileName);`
 
-The drawables are all optional (by default they are empty), you should implement at least one of them to see anything:
-   2. TextureRegionModule/SpriteModule: `Talos::TextureRegionDrawable* CreateTextureRegionDrawable(const char* region)` (optional)
+### The drawables are all optional (by default they are empty), you should implement at least one of them to see anything:
+1. TextureRegionModule/SpriteModule: `Talos::TextureRegionDrawable* CreateTextureRegionDrawable(const char* region)`<br />
 This is basic drawable for the most effects. Just takes Particle and draw it using its values.
-   3. PolylineModule: `Talos::PolylineDrawable* CreatePolylineDrawable(const char* region)` (optional)
+2. PolylineModule: `Talos::PolylineDrawable* CreatePolylineDrawable(const char* region)`<br />
 This drawable should be able to draw the lines from given points.
-   4. ShadedSpriteModule: `Talos::ShadedDrawable* CreateShadedDrawable(const char* shdrFileName)` (optional)
+3. ShadedSpriteModule: `Talos::ShadedDrawable* CreateShadedDrawable(const char* shdrFileName)`<br />
 This drawable is intended to use a special shader to draw. The shader can be exported from TalosVFX editor. You are on your own to load it and use it.
 
 Other drawables are not implemented at the time, but should be easy to add an interface at least.
 
-2. `IFileProvider`
+## `IFileProvider`
 You can inherit IFileProvider to supply your own effect loader. It should be able to return the Emitters with its Modules and Connections.
 See the RapidJsonProvider, which uses RapidJson lib to load the json and return the data to the Talos, when the effect needs to be loaded.
 
-3. `IParticleDrawable`
+## `IParticleDrawable`
 When rendering the effect you should go through the emitters (`for (auto* particleEmitter : _particleEffectInstance->GetEmitters())`)
-and their active particles (`for (auto* particle : particleEmitter->GetActiveParticles())`) to render them.
-Use:
-`particleEmitter->IsVisible()` - when false, you can skip the emitter.
-`particleEmitter->IsBlendAdd()` and `particleEmitter->IsAdditive()` to determine blending type.
-You should be able to get all the information from the `particle`, including the drawable object, which should be your own class.
-Every drawable is rendered using `void Draw(RenderContext* context, Particle* particle, float r, float g, float b, float a)` method.
-If you need to pass any engine-specific data (renderer, matrix, scale) into the drawable classes, please inherit RenderContext (simple data class, empty by default) and pass it to the Draw. There you can cast it and read.
-Every particle could have its own drawable type, which was created by your factory. By default, the Draw method is empty. You should implement the drawables you need.
+and their active particles (`for (auto* particle : particleEmitter->GetActiveParticles())`) to render them.<br />
+Use:<br />
+`particleEmitter->IsVisible()` - when false, you can skip the emitter.<br />
+`particleEmitter->IsBlendAdd()` and `particleEmitter->IsAdditive()` to determine blending type.<br />
+You should be able to get all the information from the `particle`, including the drawable object, which should be your own class.<br />
+Every drawable is rendered using `void Draw(RenderContext* context, Particle* particle, float r, float g, float b, float a)` method.<br />
+If you need to pass any engine-specific data (renderer, matrix, scale) into the drawable classes, please inherit RenderContext (simple data class, empty by default) and pass it to the Draw. There you can cast it and read.<br />
+Every particle could have its own drawable type, which was created by your factory. By default, the Draw method is empty. You should implement the drawables you need.<br />
 
 Note: For convenience I'm sharing all the inherited classes for our engine. Not directly usable for you, but you can go and see the idea. Approach in your engine should be similar.
 
