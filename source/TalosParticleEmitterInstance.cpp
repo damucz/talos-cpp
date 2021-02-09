@@ -209,7 +209,7 @@ namespace Talos
 			int particlesToDelete = (int)_activeParticles.size() - particlesToExpect;
 			if (particlesToDelete > 0)
 			{
-				for (auto it = _activeParticles.rbegin(); particlesToDelete > 0; )
+				for (auto it = _activeParticles.rbegin(); particlesToDelete > 0; --particlesToDelete)
 				{
 					Particle* particle = *it;
 					particle->_alpha = 1.0f;
