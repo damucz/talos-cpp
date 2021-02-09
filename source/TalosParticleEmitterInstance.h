@@ -68,6 +68,7 @@ namespace Talos
 		bool _paused = false;
 		bool _isContinuous = false;
 		bool _isAttached = false;
+		bool _isImmortal = false;
 
 		float _tintR = 1.0f, _tintG = 1.0f, _tintB = 1.0f, _tintA = 1.0f;		// WHITE
 

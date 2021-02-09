@@ -3,6 +3,7 @@
 #include "TalosParticleEffectInstance.h"
 #include "TalosParticle.h"
 #include "modules/TalosEmitterModule.h"
+#include <algorithm>
 
 namespace Talos
 {
@@ -64,6 +65,7 @@ namespace Talos
 		_isAttached = _emitterModule->IsAttached();
 		_isAdditive = _emitterModule->IsAdditive();
 		_isBlendAdd = _emitterModule->IsBlendAdd();
+		_isImmortal = _emitterModule->IsImmortal();
 
 		if (_delayTimer > 0)
 		{
@@ -102,6 +104,9 @@ namespace Talos
 			// let's emit
 			_particlesToEmit += _rate * deltaLeftover;
 
+			if (_isImmortal)
+				_particlesToEmit = std::max(0.0f, roundf(_rate * _duration) - _activeParticles.size());
+
 			int count = (int)_particlesToEmit;
 			for (int i = 0; i < count; ++i)
 			{
@@ -124,6 +129,20 @@ namespace Talos
 			{
 				// let's repeat
 				Restart();
+			}
+			else
+			{
+				// all immortals must die
+				if (_isImmortal)
+				{
+					for (auto* particle : _activeParticles)
+					{
+						particle->_alpha = 1.0f;
+						particle->NotifyKill();
+						delete particle;
+					}
+					_activeParticles.clear();
+				}
 			}
 		}
 
@@ -163,13 +182,43 @@ namespace Talos
 		{
 			Particle* particle = *it;
 			particle->Update(delta);
+
+			if (_isImmortal)
+			{
+				// if immortal we don't kill them
+				if (particle->_alpha >= 1.0f)
+				{
+					particle->_alpha = particle->_alpha - 1.0f;
+				}
+			}
+			
 			if (particle->_alpha >= 1.0f)
 			{
+				particle->NotifyKill();
 				delete particle;
 				it = _activeParticles.erase(it);
 			}
 			else
 				++it;
+		}
+
+		// do some immortality cleaning
+		if (_isImmortal)
+		{
+			int particlesToExpect = std::max(0, (int)roundf(_rate * _duration));
+			int particlesToDelete = (int)_activeParticles.size() - particlesToExpect;
+			if (particlesToDelete > 0)
+			{
+				for (auto it = _activeParticles.rbegin(); particlesToDelete > 0; )
+				{
+					Particle* particle = *it;
+					particle->_alpha = 1.0f;
+					particle->NotifyKill();
+					delete particle;
+					std::advance(it, 1);
+					_activeParticles.erase(it.base());
+				}
+			}
 		}
 	}
 

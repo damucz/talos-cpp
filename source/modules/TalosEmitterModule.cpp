@@ -83,6 +83,13 @@ namespace Talos
 		return _config->_isBlendAdd;
 	}
 
+	bool EmitterModule::IsImmortal()
+	{
+		FetchInputSlotValue(CONFIG);
+		if (_config->IsEmpty()) return false;
+		return _config->_immortal;
+	}
+
 	bool EmitterModule::IsEmitterModule() const
 	{
 		return true;

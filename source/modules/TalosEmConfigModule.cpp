@@ -19,6 +19,7 @@ namespace Talos
         _userValue->_additive = true;
         _userValue->_isBlendAdd = false;
         _userValue->_aligned = false;
+		_userValue->_immortal = false;
 	}
 
 	void EmConfigModule::Load(IFileProvider::ModuleData* moduleData)

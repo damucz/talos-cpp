@@ -139,5 +139,18 @@ namespace Talos
 	{
 		return _emitterReference;
 	}
+
+	void Particle::NotifyKill()
+	{
+		ParticleModule* particleModule = _emitterReference->GetParticleModule();
+		if (particleModule == nullptr) return;
+		particleModule->UpdateScopeData(this);
+
+		_drawable = particleModule->GetDrawable();
+
+		if (_drawable != nullptr) {
+			_drawable->NotifyDispose(this);
+		}
+	}
 	
 }

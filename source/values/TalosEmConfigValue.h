@@ -21,6 +21,7 @@ namespace Talos
         bool _aligned = false;
         bool _additive = true;
         bool _isBlendAdd = false;
+        bool _immortal = false;
 	};
 	
 }

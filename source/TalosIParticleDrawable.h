@@ -25,6 +25,9 @@ namespace Talos
 
 		void GetTextureRegion() const {}
 
+		void NotifyCreate(Particle* particle) {}
+		void NotifyDispose(Particle* particle) {}
+
 	protected:
 		Particle* _currentParticle = nullptr;
 	};

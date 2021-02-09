@@ -2,6 +2,7 @@
 
 namespace Talos
 {
+	
 	void EmConfigValue::Load(IFileProvider::ModuleData* moduleData)
 	{
 		_attached = moduleData->GetBool("attached");
@@ -9,6 +10,7 @@ namespace Talos
 		_aligned = moduleData->GetBool("aligned");
 		_additive = moduleData->GetBool("additive");
 		_isBlendAdd = moduleData->GetBool("isBlendAdd");
+		_immortal = moduleData->GetBool("immortal");
 	}
 
 	const char* EmConfigValue::GetValueType()
@@ -30,6 +32,7 @@ namespace Talos
 		_aligned = from->_aligned;
 		_additive = from->_additive;
 		_isBlendAdd = from->_isBlendAdd;
+		_immortal = from->_immortal;
 	}
 	
 }

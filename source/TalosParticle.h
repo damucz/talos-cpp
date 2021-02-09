@@ -34,6 +34,8 @@ namespace Talos
         float GetEmitterAlpha() const;
         IEmitter* GetEmitter() const;
 
+        void NotifyKill();
+
 	protected:
         IEmitter* _emitterReference = nullptr;
 	};

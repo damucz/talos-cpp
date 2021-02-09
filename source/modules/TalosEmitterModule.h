@@ -38,6 +38,7 @@ namespace Talos
         bool IsAligned();
         bool IsAdditive();
         bool IsBlendAdd();
+        bool IsImmortal();
 
         bool IsEmitterModule() const override;
 
